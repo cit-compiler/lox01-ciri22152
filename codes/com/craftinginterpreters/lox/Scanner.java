@@ -1,4 +1,3 @@
-//Scanner.java
 package com.craftinginterpreters.lox;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -115,28 +114,17 @@ class Scanner {
   }
   private void string() {
     while (peek() != '"' && !isAtEnd()) {
-        if (peek() == '\n') line++;
-        // 「\"」を文字列中の一部として扱う
-        if (peek() == '\\' && peekNext() == '"') {
-            advance(); // バックスラッシュを消費
-        }
-        advance(); // 通常の文字を進める
+      if (peek() == '\n') line++;
+      advance();
     }
-
-    // 文字列の終わりがない場合
     if (isAtEnd()) {
-        Lox.error(line, "Unterminated string.");
-        return;
+      Lox.error(line, "Unterminated string.");
+      return;
     }
-
-    // 終わりの「"」を消費
     advance();
-
-    // エスケープされた「\"」を通常の「"」に変換
-    String value = source.substring(start + 1, current - 1).replace("\\\"", "\"");
+    String value = source.substring(start + 1, current - 1);
     addToken(STRING, value);
-}
-
+  }
   private boolean match(char expected) {
     if (isAtEnd()) return false;
     if (source.charAt(current) != expected) return false;
